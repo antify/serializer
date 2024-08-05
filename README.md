@@ -25,6 +25,7 @@ import {
   defineNormalizer,
   defineEncoder
 } from '@antify/serializer';
+import {defineSerializer} from "./index";
 
 
 /**
@@ -52,56 +53,61 @@ type TimeTrackType = {
   end: Date;
 };
 
-/**
-  * Normalizer to transform TimeTrackValidatedFormType to TimeTrackTDOType and vice versa
-  */
-const timeTrackNormalizer = defineNormalizer<TimeTrackValidatedFormType, TimeTrackTDOType>({
-  async denormalize(data: TimeTrackTDOType): Promise<TimeTrackValidatedFormType> {
-    return {
-      date: new Date(data.start),
-      startTime: format(data.start, 'kk:mm'),
-      endTime: format(data.end, 'kk:mm'),
-    };
+const timeTrackSerializer = defineSerializer<
+  TimeTrackValidatedFormType, 
+  TimeTrackTDOType, 
+  TimeTrackType
+>(
+  /**
+   * Normalizer to transform TimeTrackValidatedFormType to TimeTrackTDOType and vice versa
+   */
+  {
+    async denormalize(data: TimeTrackTDOType): Promise<TimeTrackValidatedFormType> {
+      return {
+        date: new Date(data.start),
+        startTime: format(data.start, 'kk:mm'),
+        endTime: format(data.end, 'kk:mm'),
+      };
+    },
+    async normalize(data: TimeTrackValidatedFormType): Promise<TimeTrackTDOType> {
+      // Append date with start time
+      const start = new Date(data.date);
+      start.setUTCHours(Number(data.startTime.split(':')[0]));
+      start.setUTCMinutes(Number(data.startTime.split(':')[1]));
+
+      // Append date with end time
+      const end = new Date(data.date.toISOString());
+      end.setUTCHours(Number(data.endTime.split(':')[0]));
+      end.setUTCMinutes(Number(data.endTime.split(':')[1]));
+
+      return {
+        start: start.toISOString(),
+        end: end.toISOString()
+      };
+    }
   },
-  async normalize(data: TimeTrackValidatedFormType): Promise<TimeTrackTDOType> {
-    // Append date with start time
-    const start = new Date(data.date);
-    start.setUTCHours(Number(data.startTime.split(':')[0]));
-    start.setUTCMinutes(Number(data.startTime.split(':')[1]));
-
-    // Append date with end time
-    const end = new Date(data.date.toISOString());
-    end.setUTCHours(Number(data.endTime.split(':')[0]));
-    end.setUTCMinutes(Number(data.endTime.split(':')[1]));
-
-    return {
-      start: start.toISOString(),
-      end: end.toISOString()
-    };
+  /**
+   * Encoder to transform TimeTrackTDOType to TimeTrackType and vice versa
+   */
+  {
+    async decode(data: TimeTrackType): Promise<TimeTrackTDOType> {
+      return {
+        start: data.start.toISOString(),
+        end: data.end.toISOString()
+      };
+    },
+    async encode(data: TimeTrackTDOType): Promise<TimeTrackType> {
+      return {
+        start: new Date(data.start),
+        end: new Date(data.end)
+      };
+    }
   }
-});
+);
 
 /**
- * Encoder to transform TimeTrackTDOType to TimeTrackType and vice versa
+ * Usage on client side
  */
-const timeTrackEncoder = defineEncoder<TimeTrackTDOType, TimeTrackType>({
-  async decode(data: TimeTrackType): Promise<TimeTrackTDOType> {
-    return {
-      start: data.start.toISOString(),
-      end: data.end.toISOString()
-    };
-  },
-  async encode(data: TimeTrackTDOType): Promise<TimeTrackType> {
-    return {
-      start: new Date(data.start),
-      end: new Date(data.end)
-    };
-  }
-});
-
-/**
-  * Usage on client side
-  */
 const validatedForm: TimeTrackValidatedFormType = {
   date: new Date(),
   startTime: '08:00',
@@ -113,7 +119,7 @@ fetch('https://api.example.com/time-track', {
   headers: {
     'Content-Type': 'application/json'
   },
-  body: JSON.stringify(await timeTrackNormalizer.normalize(validatedForm))
+  body: JSON.stringify(await timeTrackSerializer.normalize(validatedForm))
 });
 
 /**
@@ -121,6 +127,6 @@ fetch('https://api.example.com/time-track', {
  */
 app.post('/time-track', async (req, res) => {
   // Do validation on req.body first. After success:
-  const timeTrack = await timeTrackEncoder.denormalize(req.body);
+  const timeTrack = await timeTrackSerializer.encode(req.body);
 });
 ```
