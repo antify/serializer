@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/antify/serializer/compare/v1.1.1...v1.2.0) (2024-08-06)
+
+
+### Features
+
+* Allow non promise normalizer and encoder ([2c5eb78](https://github.com/antify/serializer/commit/2c5eb78aaabfc2debe3708b769d588c44934c4bb))
+
 ### [1.1.1](https://github.com/antify/serializer/compare/v1.1.0...v1.1.1) (2024-08-06)
 
 
