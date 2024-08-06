@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/antify/serializer/compare/v1.1.0...v1.1.1) (2024-08-06)
+
+
+### Bug Fixes
+
+* Allow one normalizer and encoder for on serializer only ([85b374e](https://github.com/antify/serializer/commit/85b374e50dac5cac0ea43312fb04a3f02b0167c9))
+
 ## [1.1.0](https://github.com/antify/serializer/compare/v1.0.0...v1.1.0) (2024-08-05)
 
 
