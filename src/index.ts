@@ -1,82 +1,80 @@
 import {
   type SerializerInterface,
-  type EncoderInterface,
-  type DecoderInterface,
-  type NormalizerInterface,
-  type DenormalizerInterface
+  type EncodeInterface,
+  type DecodeInterface,
+  type NormalizeInterface,
+  type DenormalizeInterface
 } from './types';
 
 export function defineSerializer<LeftType, DTOType, RightType>(
-  normalizer: NormalizerInterface<LeftType, DTOType> & DenormalizerInterface<LeftType, DTOType>,
-  encoder: EncoderInterface<DTOType, RightType> & DecoderInterface<DTOType, RightType>
+  normalizer: NormalizeInterface<LeftType, DTOType> & DenormalizeInterface<LeftType, DTOType>,
+  encoder: EncodeInterface<DTOType, RightType> & DecodeInterface<DTOType, RightType>
 ): Serializer<LeftType, DTOType, RightType> {
   return new Serializer<LeftType, DTOType, RightType>(normalizer, encoder);
 }
 
+export function defineNormalizer<LeftType, DTOType>(
+  normalizer: NormalizeInterface<LeftType, DTOType> & DenormalizeInterface<LeftType, DTOType>
+): NormalizeInterface<LeftType, DTOType> & DenormalizeInterface<LeftType, DTOType> {
+  return normalizer;
+}
+
+export function defineEncoder<DTOType, RightType>(
+  encoder: EncodeInterface<DTOType, RightType> & DecodeInterface<DTOType, RightType>
+): EncodeInterface<DTOType, RightType> & DecodeInterface<DTOType, RightType> {
+  return encoder;
+}
+
 export class Serializer<LeftType, DTOType, RightType> implements SerializerInterface<LeftType, RightType>,
-  NormalizerInterface<LeftType, DTOType>,
-  DenormalizerInterface<LeftType, DTOType>,
-  EncoderInterface<DTOType, RightType>,
-  DecoderInterface<DTOType, RightType> {
+  NormalizeInterface<LeftType, DTOType>,
+  DenormalizeInterface<LeftType, DTOType>,
+  EncodeInterface<DTOType, RightType>,
+  DecodeInterface<DTOType, RightType> {
   constructor(
-    private normalizer: NormalizerInterface<LeftType, DTOType> & DenormalizerInterface<LeftType, DTOType>,
-    private encoder: EncoderInterface<DTOType, RightType> & DecoderInterface<DTOType, RightType>
+    private normalizer: NormalizeInterface<LeftType, DTOType> & DenormalizeInterface<LeftType, DTOType>,
+    private encoder: EncodeInterface<DTOType, RightType> & DecodeInterface<DTOType, RightType>
   ) {
   }
 
   /**
    * Serialize data into RightType format.
    */
-  async serialize(data: LeftType): Promise<RightType> {
-    return this.encode(await this.normalize(data));
+  serialize(data: LeftType): RightType {
+    return this.encode(this.normalize(data));
   }
 
   /**
    * Deserialize data into LeftType format.
    */
-  async deserialize(data: RightType): Promise<LeftType> {
-    return this.denormalize(await this.decode(data));
+  deserialize(data: RightType): LeftType {
+    return this.denormalize(this.decode(data));
   }
 
   /**
    * Normalize data into DTO format.
    */
-  async normalize(data: LeftType): Promise<DTOType> {
+  normalize(data: LeftType): DTOType {
     return this.normalizer.normalize(data);
   }
 
   /**
    * Denormalize data into LeftType format.
    */
-  async denormalize(data: DTOType): Promise<LeftType> {
+  denormalize(data: DTOType): LeftType {
     return this.normalizer.denormalize(data);
   }
 
   /**
    * Encode data into RightType format.
    */
-  async encode(data: DTOType): Promise<RightType> {
+  encode(data: DTOType): RightType {
     return this.encoder.encode(data);
   }
 
   /**
    * Decode data into DTOType format.
    */
-  async decode(data: RightType): Promise<DTOType> {
+  decode(data: RightType): DTOType {
     return this.encoder.decode(data);
   }
 }
-
-export function defineNormalizer<LeftType, DTOType>(
-  normalizer: NormalizerInterface<LeftType, DTOType> & DenormalizerInterface<LeftType, DTOType>
-): NormalizerInterface<LeftType, DTOType> & DenormalizerInterface<LeftType, DTOType> {
-  return normalizer;
-}
-
-export function defineEncoder<DTOType, RightType>(
-  encoder: EncoderInterface<DTOType, RightType> & DecoderInterface<DTOType, RightType>
-): EncoderInterface<DTOType, RightType> & DecoderInterface<DTOType, RightType> {
-  return encoder;
-}
-
-

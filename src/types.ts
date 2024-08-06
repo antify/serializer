@@ -1,48 +1,33 @@
 export interface SerializerInterface<LeftType, RightType> {
-  serialize(data: LeftType): RightType | Promise<RightType>
+  serialize(data: LeftType): RightType
 
-  deserialize(data: RightType): LeftType | Promise<LeftType>
+  deserialize(data: RightType): LeftType
 }
 
-export interface EncoderInterface<DTOType, RightType> {
+export interface EncodeInterface<DTOType, RightType> {
   /**
    * Encodes data into the given format.
-   *
-   * @throws UnexpectedValueError
    */
-  encode(data: DTOType): RightType | Promise<RightType>
+  encode(data: DTOType): RightType
 }
 
-export interface DecoderInterface<DTOType, RightType> {
+export interface DecodeInterface<DTOType, RightType> {
   /**
    * Decodes data into the given format.
-   *
-   * @throws UnexpectedValueError
    */
-  decode(data: RightType): DTOType | Promise<DTOType>
+  decode(data: RightType): DTOType
 }
 
-export interface NormalizerInterface<LeftType, DTOType> {
+export interface NormalizeInterface<LeftType, DTOType> {
   /**
    * Normalizes data into the given format.
-   *
-   * @throws UnexpectedValueError
    */
-  normalize(data: LeftType): DTOType | Promise<DTOType>
+  normalize(data: LeftType): DTOType
 }
 
-export interface DenormalizerInterface<LeftType, DTOType> {
+export interface DenormalizeInterface<LeftType, DTOType> {
   /**
    * Denormalizes data into the given format.
-   *
-   * @throws UnexpectedValueError
    */
-  denormalize(data: DTOType): LeftType | Promise<LeftType>
-}
-
-export class UnexpectedValueError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'UnexpectedValueError';
-  }
+  denormalize(data: DTOType): LeftType
 }

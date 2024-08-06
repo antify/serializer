@@ -58,13 +58,13 @@ describe('Serializer tests', () => {
     }
   });
   const timeTrackEncoder = defineEncoder<TimeTrackTDOType, TimeTrackType>({
-    async decode(data: TimeTrackType): Promise<TimeTrackTDOType> {
+    decode(data: TimeTrackType): TimeTrackTDOType {
       return {
         start: data.start.toISOString(),
         end: data.end.toISOString()
       };
     },
-    async encode(data: TimeTrackTDOType): Promise<TimeTrackType> {
+    encode(data: TimeTrackTDOType): TimeTrackType {
       return {
         start: new Date(data.start),
         end: new Date(data.end)
@@ -75,7 +75,7 @@ describe('Serializer tests', () => {
     timeTrackNormalizer, timeTrackEncoder
   );
 
-  test('Should normalize correctly', async () => {
+  test('Should normalize correctly', () => {
     const timeTrack = timeTrackNormalizer.normalize({
       date: new Date('2000-01-01T00:00:00.000Z'),
       startTime: '10:00',
@@ -88,7 +88,7 @@ describe('Serializer tests', () => {
     });
   });
 
-  test('Should denormalize correctly', async () => {
+  test('Should denormalize correctly', () => {
     const timeTrack = timeTrackNormalizer.denormalize({
       start: '2000-01-01T10:00:00.000Z',
       end: '2000-01-01T12:00:00.000Z',
@@ -101,8 +101,8 @@ describe('Serializer tests', () => {
     });
   });
 
-  test('Should encode correctly', async () => {
-    const timeTrack = await timeTrackEncoder.encode({
+  test('Should encode correctly', () => {
+    const timeTrack = timeTrackEncoder.encode({
       start: '2000-01-01T10:00:00.000Z',
       end: '2000-01-01T12:00:00.000Z',
     });
@@ -113,8 +113,8 @@ describe('Serializer tests', () => {
     });
   });
 
-  test('Should decode correctly', async () => {
-    const timeTrack = await timeTrackEncoder.decode({
+  test('Should decode correctly', () => {
+    const timeTrack = timeTrackEncoder.decode({
       start: new Date('2000-01-01T10:00:00.000Z'),
       end: new Date('2000-01-01T12:00:00.000Z'),
     });
@@ -125,8 +125,8 @@ describe('Serializer tests', () => {
     });
   });
 
-  test('Should serialize correctly', async () => {
-    const timeTrack = await timeTrackSerializer.serialize({
+  test('Should serialize correctly', () => {
+    const timeTrack = timeTrackSerializer.serialize({
       date: new Date('2000-01-01T00:00:00.000Z'),
       startTime: '10:00',
       endTime: '12:00'
@@ -138,8 +138,8 @@ describe('Serializer tests', () => {
     });
   });
 
-  test('Should deserialize correctly', async () => {
-    const timeTrack = await timeTrackSerializer.deserialize({
+  test('Should deserialize correctly', () => {
+    const timeTrack = timeTrackSerializer.deserialize({
       start: new Date('2000-01-01T10:00:00.000Z'),
       end: new Date('2000-01-01T12:00:00.000Z'),
     });
