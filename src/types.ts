@@ -11,13 +11,6 @@ export interface EncoderInterface<DTOType, RightType> {
    * @throws UnexpectedValueError
    */
   encode(data: DTOType): Promise<RightType>
-
-  /**
-   * Checks whether the serializer can encode to given format.
-   *
-   * If this function is not implemented, it will return true by default.
-   */
-  supportsEncoding?(data: unknown): boolean
 }
 
 export interface DecoderInterface<DTOType, RightType> {
@@ -27,13 +20,6 @@ export interface DecoderInterface<DTOType, RightType> {
    * @throws UnexpectedValueError
    */
   decode(data: RightType): Promise<DTOType>
-
-  /**
-   * Checks whether the serializer can encode to given format.
-   *
-   * If this function is not implemented, it will return true by default.
-   */
-  supportsDecoding?(data: unknown): boolean
 }
 
 export interface NormalizerInterface<LeftType, DTOType> {
@@ -43,13 +29,6 @@ export interface NormalizerInterface<LeftType, DTOType> {
    * @throws UnexpectedValueError
    */
   normalize(data: LeftType): Promise<DTOType>
-
-  /**
-   * Checks whether the serializer can normalize to given format.
-   *
-   * If this function is not implemented, it will return true by default.
-   */
-  supportsNormalization?(data: unknown): boolean
 }
 
 export interface DenormalizerInterface<LeftType, DTOType> {
@@ -59,25 +38,11 @@ export interface DenormalizerInterface<LeftType, DTOType> {
    * @throws UnexpectedValueError
    */
   denormalize(data: DTOType): Promise<LeftType>
-
-  /**
-   * Checks whether the serializer can denormalize to given format.
-   *
-   * If this function is not implemented, it will return true by default.
-   */
-  supportsDenormalization?(data: unknown): boolean
 }
 
 export class UnexpectedValueError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'UnexpectedValueError';
-  }
-}
-
-export class UnsupportedFormatError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'UnsupportedFormatError';
   }
 }
