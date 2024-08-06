@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/antify/serializer/compare/v1.2.0...v1.2.1) (2024-08-06)
+
+
+### Bug Fixes
+
+* Drop promise support ([3273d57](https://github.com/antify/serializer/commit/3273d57ab073bbb2ddb4ec2b2f9c0810f4e3ed0b))
+
 ## [1.2.0](https://github.com/antify/serializer/compare/v1.1.1...v1.2.0) (2024-08-06)
 
 
