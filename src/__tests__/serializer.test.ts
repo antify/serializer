@@ -33,14 +33,14 @@ type TimeTrackType = {
 
 describe('Serializer tests', () => {
   const timeTrackNormalizer = defineNormalizer<TimeTrackValidatedFormType, TimeTrackTDOType>({
-    async denormalize(data: TimeTrackTDOType): Promise<TimeTrackValidatedFormType> {
+    denormalize(data: TimeTrackTDOType): TimeTrackValidatedFormType {
       return {
         date: new Date(data.start),
         startTime: format(data.start, 'kk:mm'),
         endTime: format(data.end, 'kk:mm'),
       };
     },
-    async normalize(data: TimeTrackValidatedFormType): Promise<TimeTrackTDOType> {
+    normalize(data: TimeTrackValidatedFormType): TimeTrackTDOType {
       // Append date with start time
       const start = new Date(data.date);
       start.setUTCHours(Number(data.startTime.split(':')[0]));
@@ -76,7 +76,7 @@ describe('Serializer tests', () => {
   );
 
   test('Should normalize correctly', async () => {
-    const timeTrack = await timeTrackNormalizer.normalize({
+    const timeTrack = timeTrackNormalizer.normalize({
       date: new Date('2000-01-01T00:00:00.000Z'),
       startTime: '10:00',
       endTime: '12:00'
@@ -89,7 +89,7 @@ describe('Serializer tests', () => {
   });
 
   test('Should denormalize correctly', async () => {
-    const timeTrack = await timeTrackNormalizer.denormalize({
+    const timeTrack = timeTrackNormalizer.denormalize({
       start: '2000-01-01T10:00:00.000Z',
       end: '2000-01-01T12:00:00.000Z',
     });

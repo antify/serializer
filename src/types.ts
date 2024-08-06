@@ -1,7 +1,7 @@
 export interface SerializerInterface<LeftType, RightType> {
-  serialize(data: LeftType): Promise<RightType>
+  serialize(data: LeftType): RightType | Promise<RightType>
 
-  deserialize(data: RightType): Promise<LeftType>
+  deserialize(data: RightType): LeftType | Promise<LeftType>
 }
 
 export interface EncoderInterface<DTOType, RightType> {
@@ -10,7 +10,7 @@ export interface EncoderInterface<DTOType, RightType> {
    *
    * @throws UnexpectedValueError
    */
-  encode(data: DTOType): Promise<RightType>
+  encode(data: DTOType): RightType | Promise<RightType>
 }
 
 export interface DecoderInterface<DTOType, RightType> {
@@ -19,7 +19,7 @@ export interface DecoderInterface<DTOType, RightType> {
    *
    * @throws UnexpectedValueError
    */
-  decode(data: RightType): Promise<DTOType>
+  decode(data: RightType): DTOType | Promise<DTOType>
 }
 
 export interface NormalizerInterface<LeftType, DTOType> {
@@ -28,7 +28,7 @@ export interface NormalizerInterface<LeftType, DTOType> {
    *
    * @throws UnexpectedValueError
    */
-  normalize(data: LeftType): Promise<DTOType>
+  normalize(data: LeftType): DTOType | Promise<DTOType>
 }
 
 export interface DenormalizerInterface<LeftType, DTOType> {
@@ -37,7 +37,7 @@ export interface DenormalizerInterface<LeftType, DTOType> {
    *
    * @throws UnexpectedValueError
    */
-  denormalize(data: DTOType): Promise<LeftType>
+  denormalize(data: DTOType): LeftType | Promise<LeftType>
 }
 
 export class UnexpectedValueError extends Error {
