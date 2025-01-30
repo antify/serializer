@@ -6,11 +6,6 @@ import {
   type DenormalizeInterface
 } from './types';
 
-/**
- * Encoder
- */
-export * from './encoder/json.encoder';
-
 export function defineSerializer<LeftType, DTOType, RightType>(
   normalizer: NormalizeInterface<LeftType, DTOType> & DenormalizeInterface<LeftType, DTOType>,
   encoder: EncodeInterface<DTOType, RightType> & DecodeInterface<DTOType, RightType>
@@ -83,3 +78,8 @@ export class Serializer<LeftType, DTOType, RightType> implements SerializerInter
     return this.encoder.decode(data);
   }
 }
+
+/**
+ * Encoder
+ */
+export * from './encoder/json.encoder';
